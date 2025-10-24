@@ -1,10 +1,11 @@
 "use client"
 import { useEffect, useRef, useState } from 'react';
 import Logos from './Logos'
+import Image from 'next/image';
 
 const Widget2 = () => {
 
-  const imageUrl = "./image.jpg";
+  const imageUrl = "/image.jpg";
 
   const defaultImages: string[] = [
     imageUrl,
@@ -12,16 +13,11 @@ const Widget2 = () => {
     imageUrl,
   ];
 
-  const [images, setImages] = useState<string[]>([]);
-
-  useEffect(() => {
-    const savedImages = localStorage.getItem("images");
-    if (savedImages) {
-      setImages(JSON.parse(savedImages));
-    } else {
-      setImages(defaultImages);
-    }
-  }, []);
+  const [images, setImages] = useState<string[]>(() => {
+    if (typeof window === "undefined") return defaultImages; 
+    const saved = localStorage.getItem("images");
+    return saved ? JSON.parse(saved) : defaultImages;
+  });
 
 
   useEffect(() => {
@@ -40,7 +36,7 @@ const Widget2 = () => {
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth',
       });
-    } 
+    }
   };
 
   const handleAddImage = () => {
@@ -62,18 +58,18 @@ const Widget2 = () => {
           <div className='flex gap-4 items-center justify-center'>
             <button onClick={handleAddImage} className='w-[131.32px] cursor-pointer h-[46px] mr-5 rounded-full bg-[#FFFFFF08] backdrop-blur-[104.5599365234375px] shadow-[inset_0px_3.26px_3.26px_0px_#FFFFFF26,inset_0px_0px_48.91px_0px_#FFFFFF0D,9px_10px_7.1px_0px_#00000066,-0.5px_-0.5px_6.9px_0px_#FFFFFF40] '>
               <div className="flex items-center justify-center gap-1 text-white font-plusjakarta font-bold text-[12px] ">
-                <img src="/Add.png" alt="add" />
+                <Image src="/Add.png" alt="add" width={10} height={10} />
                 <span>ADD IMAGE</span>
               </div>
             </button>
 
             <div className='flex space-x-4 mr-3 items-center justify-center'>
               <div onClick={() => handleScroll('left')} className="cursor-pointer w-[45px] h-[45px] bg-[linear-gradient(139.14deg,#303439_12.4%,#161718_94.96%)] rounded-full shadow-[4px_5px_30px_5px_#101213,-5px_-3px_30px_-5px_#96BEE7] flex items-center justify-center">
-                <img src="/left.png" alt="" />
+                <Image src="/left.png" alt="" width={16} height={16} />
               </div>
 
               <div onClick={() => handleScroll('right')} className="cursor-pointer w-[45px] h-[45px] bg-[linear-gradient(139.14deg,#303439_12.4%,#161718_94.96%)] rounded-full shadow-[4px_5px_30px_5px_#101213,-5px_-3px_30px_-5px_#96BEE7] flex items-center justify-center">
-                <img src="/right.png" alt="" />
+                <Image src="/right.png" alt="" width={16} height={16} />
               </div>
 
             </div>
@@ -89,10 +85,11 @@ const Widget2 = () => {
                      hover:-rotate-6 hover:scale-108 hover:-translate-y-2
                      hover:shadow-[5px_5px_15px_5px_#00000066] `}>
               <div className={`w-full h-full relative  rounded-3xl overflow-hidden`}>
-                <img
+                <Image
                   src={imgSrc}
                   alt={`image-${index}`}
                   className="w-full h-full object-cover"
+                  width={190} height={179}
                 />
               </div>
             </div>
